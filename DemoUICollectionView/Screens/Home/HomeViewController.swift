@@ -11,12 +11,17 @@ class HomeViewController: UIViewController {
     
     let homeViewModel = HomeViewModel()
     
-    fileprivate let productCollectionView: UICollectionView = {
+    fileprivate let newsSearchBar: UISearchBar = {
+        let searchbar = UISearchBar()
+        return searchbar
+    }()
+    
+    fileprivate let newsCollectionView: UICollectionView = {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
         layout.scrollDirection = UICollectionView.ScrollDirection.vertical
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         collectionView.setCollectionViewLayout(layout, animated: true)
-        collectionView.register(cellType: ProductCell.self)
+        collectionView.register(cellType: NewsCell.self)
         return collectionView
     }()
     
@@ -33,37 +38,52 @@ class HomeViewController: UIViewController {
         
         view.backgroundColor = .white
         
-        productCollectionView.delegate = self
-        productCollectionView.dataSource = self
-        productCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(productCollectionView)
+        homeViewModel.delegate = self
+        newsSearchBar.delegate = self
+        newsCollectionView.delegate = self
+        newsCollectionView.dataSource = self
+        
+        [newsSearchBar, newsCollectionView].forEach { item in
+            view.addSubview(item)
+            item.translatesAutoresizingMaskIntoConstraints = false
+        }
         
         // Set constraint
         let layoutGuide = view.safeAreaLayoutGuide
-        productCollectionView.heightAnchor.constraint(equalTo: layoutGuide.heightAnchor, constant: 0).isActive = true
-        productCollectionView.widthAnchor.constraint(equalTo: layoutGuide.widthAnchor, constant: 0).isActive = true
-        productCollectionView.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: 0).isActive = true
-        productCollectionView.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: 0).isActive = true
-        productCollectionView.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 0).isActive = true
-        productCollectionView.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: 0).isActive = true
+        
+        newsSearchBar.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: 0).isActive = true
+        newsSearchBar.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 10).isActive = true
+        newsSearchBar.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -10).isActive = true
+        newsSearchBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        newsCollectionView.widthAnchor.constraint(equalTo: layoutGuide.widthAnchor, constant: 0).isActive = true
+        newsCollectionView.topAnchor.constraint(equalTo: newsSearchBar.bottomAnchor, constant: 0).isActive = true
+        newsCollectionView.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: 0).isActive = true
+        newsCollectionView.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 0).isActive = true
+        newsCollectionView.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: 0).isActive = true
     }
     
-    func showDetailProduct(index: Int) {
+    private func showDetailNews(index: Int) {
         let detailViewControllertail = DetailViewController()
-        detailViewControllertail.detailViewModel.itemProduct = homeViewModel.listProduct[index]
+        detailViewControllertail.detailViewModel.itemNews = homeViewModel.listNews[index]
         navigationController?.pushViewController(detailViewControllertail, animated: true)
+    }
+    
+    private func clearSearchBar() {
+        homeViewModel.listNews.removeAll()
+        newsCollectionView.reloadData()
     }
 }
 
 extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        showDetailProduct(index: indexPath.item)
+        showDetailNews(index: indexPath.item)
     }
 }
 
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (productCollectionView.frame.width - 45) / 2, height: (productCollectionView.frame.height - 30) / 3)
+        return CGSize(width: (newsCollectionView.frame.width - 45) / 2, height: (newsCollectionView.frame.height - 30) / 3)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -73,13 +93,43 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 
 extension HomeViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return homeViewModel.listProduct.count
+        return homeViewModel.listNews.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let itemCell = collectionView.dequeueReusableCell(with: ProductCell.self, for: indexPath)
-        itemCell.configCell(product: homeViewModel.listProduct[indexPath.item])
+        let itemCell = collectionView.dequeueReusableCell(with: NewsCell.self, for: indexPath)
+        itemCell.configCell(new: homeViewModel.listNews[indexPath.item])
         return itemCell
     }
 }
 
+extension HomeViewController: HomeViewModelEvents {
+    func gotDataNews() {
+        DispatchQueue.main.async {
+            self.newsCollectionView.reloadData()
+        }
+    }
+    
+    func gotError() { }
+}
+
+extension HomeViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchBar.showsCancelButton = true
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.reload(_:)), object: searchBar)
+        perform(#selector(self.reload(_:)), with: searchBar, afterDelay: 1)
+    }
+
+    @objc func reload(_ searchBar: UISearchBar) {
+        guard let query = searchBar.text, query.trimmingCharacters(in: .whitespaces) != "" else {
+            clearSearchBar()
+            return
+        }
+        homeViewModel.getApi(query: query)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = false
+        searchBar.resignFirstResponder()
+    }
+}
