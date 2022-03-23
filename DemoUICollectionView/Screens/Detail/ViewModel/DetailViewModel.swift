@@ -12,7 +12,8 @@ protocol DetailViewModelEvents: AnyObject {
 
 
 class DetailViewModel {
-    var itemProduct: Product = Product()
+    
+    var itemNews: Articles = Articles()
     weak var delegate: DetailViewModelEvents?
     
     func getData() {

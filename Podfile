@@ -6,7 +6,7 @@ target 'DemoUICollectionView' do
   use_frameworks!
 
   # Pods for DemoUICollectionView
-  pod 'Kingfisher', '~> 7.0'
+  pod 'SDWebImageSVGCoder'
 
   target 'DemoUICollectionViewTests' do
     inherit! :search_paths

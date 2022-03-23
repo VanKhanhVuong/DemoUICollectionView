@@ -10,7 +10,6 @@ import UIKit
 class DetailViewController: UIViewController {
     
     let detailViewModel = DetailViewModel()
-    let utils = Utils()
     
     fileprivate let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -22,31 +21,31 @@ class DetailViewController: UIViewController {
         return view
     }()
     
-    fileprivate let productImageView: UIImageView = {
+    fileprivate let newsImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
-    fileprivate let rateLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 1
-        return label
-    }()
-    
-    fileprivate let productNameLabel: UILabel = {
+    fileprivate let titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         return label
     }()
     
-    fileprivate let productDetailLabel: UILabel = {
+    fileprivate let descriptionLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         return label
     }()
     
-    fileprivate let priceLabel: UILabel = {
+    fileprivate let authorLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        return label
+    }()
+    
+    fileprivate let sourceLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         return label
@@ -70,7 +69,7 @@ class DetailViewController: UIViewController {
         scrollView.addSubview(contentView)
         contentView.translatesAutoresizingMaskIntoConstraints = false
         
-        [rateLabel, productImageView, productNameLabel, productDetailLabel, priceLabel].forEach { item in
+        [newsImageView, titleLabel, descriptionLabel, sourceLabel, authorLabel].forEach { item in
             contentView.addSubview(item)
             item.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -87,41 +86,48 @@ class DetailViewController: UIViewController {
         contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0).isActive = true
         contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: 0).isActive = true
         
-        productImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30).isActive = true
-        productImageView.heightAnchor.constraint(equalTo: layoutGuide.heightAnchor, multiplier: 1/3).isActive = true
-        productImageView.widthAnchor.constraint(equalTo: productImageView.heightAnchor, constant: 0).isActive = true
-        productImageView.centerXAnchor.constraint(equalTo: layoutGuide.centerXAnchor, constant: 0).isActive = true
+        newsImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30).isActive = true
+        newsImageView.heightAnchor.constraint(equalTo: layoutGuide.heightAnchor, multiplier: 1/3).isActive = true
+        newsImageView.widthAnchor.constraint(equalTo: newsImageView.heightAnchor, constant: 0).isActive = true
+        newsImageView.centerXAnchor.constraint(equalTo: layoutGuide.centerXAnchor, constant: 0).isActive = true
         
-        rateLabel.topAnchor.constraint(equalTo: productImageView.bottomAnchor, constant: 30).isActive = true
-        rateLabel.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -10).isActive = true
-        rateLabel.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 10).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: newsImageView.bottomAnchor, constant: 20).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -10).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 10).isActive = true
+        titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 30).isActive = true
         
-        productNameLabel.topAnchor.constraint(equalTo: rateLabel.bottomAnchor, constant: 20).isActive = true
-        productNameLabel.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -10).isActive = true
-        productNameLabel.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 10).isActive = true
-        productNameLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 30).isActive = true
+        descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5).isActive = true
+        descriptionLabel.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -10).isActive = true
+        descriptionLabel.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 10).isActive = true
+        descriptionLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 22).isActive = true
         
-        productDetailLabel.topAnchor.constraint(equalTo: productNameLabel.bottomAnchor, constant: 5).isActive = true
-        productDetailLabel.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -10).isActive = true
-        productDetailLabel.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 10).isActive = true
-        productDetailLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 22).isActive = true
+        authorLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 5).isActive = true
+        authorLabel.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -10).isActive = true
+        authorLabel.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 10).isActive = true
+        authorLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 20).isActive = true
         
-        priceLabel.topAnchor.constraint(equalTo: productDetailLabel.bottomAnchor, constant: 5).isActive = true
-        priceLabel.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -10).isActive = true
-        priceLabel.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 10).isActive = true
-        priceLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -10).isActive = true
-        priceLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 20).isActive = true
+        sourceLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 5).isActive = true
+        sourceLabel.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -10).isActive = true
+        sourceLabel.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 10).isActive = true
+        sourceLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -10).isActive = true
+        sourceLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 20).isActive = true
     }
 }
 
 extension DetailViewController: DetailViewModelEvents {
     func gotData() {
         DispatchQueue.main.async {
-            self.productImageView.setImageWithUrl(url: self.detailViewModel.itemProduct.image)
-            self.rateLabel.attributedText = self.utils.changeColorText(number: self.detailViewModel.itemProduct.rate, color: .orange)
-            self.productNameLabel.text = "Product name:\n" + self.detailViewModel.itemProduct.name
-            self.productDetailLabel.text = "Detail:\n" + self.detailViewModel.itemProduct.detail
-            self.priceLabel.text = "Price:\n$ \(self.detailViewModel.itemProduct.price)"
+            let image = self.detailViewModel.itemNews.urlToImage ?? ""
+            let title = self.detailViewModel.itemNews.title ?? ""
+            let description = self.detailViewModel.itemNews.description ?? ""
+            let author = self.detailViewModel.itemNews.author ?? ""
+            let source = self.detailViewModel.itemNews.source?.name ?? ""
+            
+            self.newsImageView.setImageWithUrl(url: image)
+            self.titleLabel.text = "Title:\n" + title + "\n"
+            self.descriptionLabel.text = "Description:\n" + description + "\n"
+            self.authorLabel.text = "Author:\n" + author + "\n"
+            self.sourceLabel.text = "Source:\n" + source
         }
     }
 }
