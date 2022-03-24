@@ -47,19 +47,18 @@ class HomeViewController: UIViewController {
         }
     }
     
-    func showGreen() {
+    private func showGreen() {
         connectStatusView.backgroundColor = .green
         perform(#selector(showWhite(_:)), with: connectStatusView, afterDelay: 3)
     }
     
-    func showRed() {
+    private func showRed() {
         connectStatusView.backgroundColor = .red
         perform(#selector(showWhite(_:)), with: connectStatusView, afterDelay: 3)
     }
     
     @objc func showWhite(_ view: UIView) {
         connectStatusView.backgroundColor = .white
-        connectStatusView.heightAnchor.constraint(equalToConstant: 0).isActive = true
     }
     
     private func setupView() {
@@ -102,9 +101,11 @@ class HomeViewController: UIViewController {
     }
     
     private func showDetailNews(index: Int) {
-        let detailViewControllertail = DetailViewController()
-        detailViewControllertail.detailViewModel.itemNews = homeViewModel.listNews[index]
-        navigationController?.pushViewController(detailViewControllertail, animated: true)
+        let detailViewController = DetailViewController()
+        detailViewController.detailViewModel.itemNews = homeViewModel.listNews[index]
+        detailViewController.detailViewModel.listNews = homeViewModel.listNews
+        detailViewController.detailViewModel.listNews.remove(at: index)
+        navigationController?.pushViewController(detailViewController, animated: true)
     }
     
     private func clearSearchBar() {
@@ -169,7 +170,6 @@ extension HomeViewController: UISearchBarDelegate {
         } else {
             showAlert(message: textDisconnet)
         }
-        
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {

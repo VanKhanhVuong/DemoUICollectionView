@@ -1,5 +1,5 @@
 //
-//  News.swift
+//  Articles.swift
 //  DemoUICollectionView
 //
 //  Created by admin on 22/03/2022.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DataNews: Decodable {
+struct DataArticles: Decodable {
     var status: String?
     var articles: [Articles]?
     
