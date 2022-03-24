@@ -26,6 +26,12 @@ class HomeViewController: UIViewController {
         return collectionView
     }()
     
+    fileprivate let connectStatusView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
@@ -35,7 +41,25 @@ class HomeViewController: UIViewController {
     private func checkInternet() {
         if !reachability.isConnectedToNetwork() {
             showAlert(message: textDisconnet)
+            showRed()
+        } else {
+            showGreen()
         }
+    }
+    
+    func showGreen() {
+        connectStatusView.backgroundColor = .green
+        perform(#selector(showWhite(_:)), with: connectStatusView, afterDelay: 3)
+    }
+    
+    func showRed() {
+        connectStatusView.backgroundColor = .red
+        perform(#selector(showWhite(_:)), with: connectStatusView, afterDelay: 3)
+    }
+    
+    @objc func showWhite(_ view: UIView) {
+        connectStatusView.backgroundColor = .white
+        connectStatusView.heightAnchor.constraint(equalToConstant: 0).isActive = true
     }
     
     private func setupView() {
@@ -51,7 +75,7 @@ class HomeViewController: UIViewController {
         newsCollectionView.delegate = self
         newsCollectionView.dataSource = self
         
-        [newsSearchBar, newsCollectionView].forEach { item in
+        [newsSearchBar, newsCollectionView, connectStatusView].forEach { item in
             view.addSubview(item)
             item.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -64,11 +88,17 @@ class HomeViewController: UIViewController {
         newsSearchBar.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -10).isActive = true
         newsSearchBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
+        connectStatusView.heightAnchor.constraint(equalToConstant: 10).isActive = true
+        connectStatusView.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 0).isActive = true
+        connectStatusView.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: 0).isActive = true
+        connectStatusView.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: 0).isActive = true
+        
         newsCollectionView.widthAnchor.constraint(equalTo: layoutGuide.widthAnchor, constant: 0).isActive = true
         newsCollectionView.topAnchor.constraint(equalTo: newsSearchBar.bottomAnchor, constant: 0).isActive = true
-        newsCollectionView.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: 0).isActive = true
+        newsCollectionView.bottomAnchor.constraint(equalTo: connectStatusView.bottomAnchor, constant: 0).isActive = true
         newsCollectionView.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 0).isActive = true
         newsCollectionView.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: 0).isActive = true
+        
     }
     
     private func showDetailNews(index: Int) {
