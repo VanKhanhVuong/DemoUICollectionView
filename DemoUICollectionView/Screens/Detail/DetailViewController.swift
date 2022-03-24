@@ -57,7 +57,7 @@ class DetailViewController: UIViewController {
     }
     
     private func setupUI() {
-        self.title = "Detail"
+        self.title = detailTilte
         view.backgroundColor = .white
         
         detailViewModel.delegate = self
@@ -117,11 +117,11 @@ class DetailViewController: UIViewController {
 extension DetailViewController: DetailViewModelEvents {
     func gotData() {
         DispatchQueue.main.async {
-            let image = self.detailViewModel.itemNews.urlToImage ?? ""
-            let title = self.detailViewModel.itemNews.title ?? ""
-            let description = self.detailViewModel.itemNews.description ?? ""
-            let author = self.detailViewModel.itemNews.author ?? ""
-            let source = self.detailViewModel.itemNews.source?.name ?? ""
+            let image = self.detailViewModel.itemNews.urlToImage ?? whiteSpaces
+            let title = self.detailViewModel.itemNews.title ?? whiteSpaces
+            let description = self.detailViewModel.itemNews.description ?? whiteSpaces
+            let author = self.detailViewModel.itemNews.author ?? whiteSpaces
+            let source = self.detailViewModel.itemNews.source?.name ?? whiteSpaces
             
             self.newsImageView.setImageWithUrl(url: image)
             self.titleLabel.text = "Title:\n" + title + "\n"

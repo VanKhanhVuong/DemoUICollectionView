@@ -10,6 +10,7 @@ import UIKit
 class HomeViewController: UIViewController {
     
     let homeViewModel = HomeViewModel()
+    let reachability = Reachability()
     
     fileprivate let newsSearchBar: UISearchBar = {
         let searchbar = UISearchBar()
@@ -28,13 +29,20 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        checkInternet()
+    }
+    
+    private func checkInternet() {
+        if !reachability.isConnectedToNetwork() {
+            showAlert(message: textDisconnet)
+        }
     }
     
     private func setupView() {
-        self.title = "Home"
+        self.title = homeTitle
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
         navigationController?.navigationBar.tintColor = .black
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: whiteSpaces, style: .done, target: nil, action: nil)
         
         view.backgroundColor = .white
         
@@ -121,11 +129,17 @@ extension HomeViewController: UISearchBarDelegate {
     }
 
     @objc func reload(_ searchBar: UISearchBar) {
-        guard let query = searchBar.text, query.trimmingCharacters(in: .whitespaces) != "" else {
+        guard let query = searchBar.text, query.trimmingCharacters(in: .whitespaces) != whiteSpaces else {
             clearSearchBar()
             return
         }
-        homeViewModel.getApi(query: query)
+        
+        if reachability.isConnectedToNetwork() {
+            homeViewModel.getApi(query: query)
+        } else {
+            showAlert(message: textDisconnet)
+        }
+        
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {

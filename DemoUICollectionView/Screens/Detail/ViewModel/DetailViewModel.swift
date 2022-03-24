@@ -10,7 +10,6 @@ protocol DetailViewModelEvents: AnyObject {
     func gotData()
 }
 
-
 class DetailViewModel {
     
     var itemNews: Articles = Articles()
