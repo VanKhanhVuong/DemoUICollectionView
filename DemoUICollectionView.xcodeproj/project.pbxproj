@@ -15,6 +15,11 @@
 		84754A9227EC0CA300116D77 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84754A9127EC0CA300116D77 /* Reachability.swift */; };
 		84754A9427EC0E7400116D77 /* showAlert+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84754A9327EC0E7400116D77 /* showAlert+Extention.swift */; };
 		84754A9E27EC31B100116D77 /* RelatedNewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84754A9D27EC31B100116D77 /* RelatedNewsCell.swift */; };
+		84754AA127EC5FF800116D77 /* TargetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84754AA027EC5FF800116D77 /* TargetType.swift */; };
+		84754AA427EC649200116D77 /* NewsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84754AA327EC649200116D77 /* NewsAPI.swift */; };
+		84754AA727EC66FC00116D77 /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84754AA627EC66FC00116D77 /* ApiClient.swift */; };
+		84754AAB27EC7AC900116D77 /* WeatherAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84754AAA27EC7AC900116D77 /* WeatherAPI.swift */; };
+		84754AAD27EC7AEA00116D77 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84754AAC27EC7AEA00116D77 /* Weather.swift */; };
 		84B5CF6E27E97B6000A847E5 /* setImage+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B5CF6D27E97B6000A847E5 /* setImage+Extention.swift */; };
 		84B5CF7627E98B9A00A847E5 /* NewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B5CF7527E98B9A00A847E5 /* NewsCell.swift */; };
 		84B5CF7A27E9AA1B00A847E5 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B5CF7927E9AA1B00A847E5 /* DetailViewController.swift */; };
@@ -61,6 +66,11 @@
 		84754A9127EC0CA300116D77 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		84754A9327EC0E7400116D77 /* showAlert+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "showAlert+Extention.swift"; sourceTree = "<group>"; };
 		84754A9D27EC31B100116D77 /* RelatedNewsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedNewsCell.swift; sourceTree = "<group>"; };
+		84754AA027EC5FF800116D77 /* TargetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetType.swift; sourceTree = "<group>"; };
+		84754AA327EC649200116D77 /* NewsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsAPI.swift; sourceTree = "<group>"; };
+		84754AA627EC66FC00116D77 /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
+		84754AAA27EC7AC900116D77 /* WeatherAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAPI.swift; sourceTree = "<group>"; };
+		84754AAC27EC7AEA00116D77 /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		84B5CF6D27E97B6000A847E5 /* setImage+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "setImage+Extention.swift"; sourceTree = "<group>"; };
 		84B5CF7527E98B9A00A847E5 /* NewsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCell.swift; sourceTree = "<group>"; };
 		84B5CF7927E9AA1B00A847E5 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
@@ -159,6 +169,31 @@
 			path = RelatedNewsCell;
 			sourceTree = "<group>";
 		};
+		84754A9F27EC5FCC00116D77 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				84754AA027EC5FF800116D77 /* TargetType.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		84754AA227EC647C00116D77 /* EndPoint */ = {
+			isa = PBXGroup;
+			children = (
+				84754AA327EC649200116D77 /* NewsAPI.swift */,
+				84754AAA27EC7AC900116D77 /* WeatherAPI.swift */,
+			);
+			path = EndPoint;
+			sourceTree = "<group>";
+		};
+		84754AA527EC66E000116D77 /* ApiClient */ = {
+			isa = PBXGroup;
+			children = (
+				84754AA627EC66FC00116D77 /* ApiClient.swift */,
+			);
+			path = ApiClient;
+			sourceTree = "<group>";
+		};
 		84B5CF7427E98B5700A847E5 /* NewsCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -188,6 +223,9 @@
 		84B5CF9D27EAC72600A847E5 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				84754AA527EC66E000116D77 /* ApiClient */,
+				84754AA227EC647C00116D77 /* EndPoint */,
+				84754A9F27EC5FCC00116D77 /* Service */,
 				84754A9027EC0C7B00116D77 /* Reachability */,
 				84BBBAFE27EB0DAA007A6BD4 /* ApiService */,
 				84C625E927E9712000BC4EF6 /* Model */,
@@ -298,6 +336,7 @@
 			children = (
 				84C625EB27E9713F00BC4EF6 /* Articles.swift */,
 				842E6D4B27EACCB2002EA133 /* ErrorModel.swift */,
+				84754AAC27EC7AEA00116D77 /* Weather.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -578,17 +617,22 @@
 				84C625DC27E966E600BC4EF6 /* HomeViewController.swift in Sources */,
 				84C625F127E972D900BC4EF6 /* className+Extention.swift in Sources */,
 				84C625EF27E9726800BC4EF6 /* register+Extention.swift in Sources */,
+				84754AA427EC649200116D77 /* NewsAPI.swift in Sources */,
 				84754A9427EC0E7400116D77 /* showAlert+Extention.swift in Sources */,
 				84C625E027E96CA500BC4EF6 /* HomeViewModel.swift in Sources */,
 				84754A9E27EC31B100116D77 /* RelatedNewsCell.swift in Sources */,
 				84754A8C27EC05BB00116D77 /* Constant.swift in Sources */,
 				84754A9227EC0CA300116D77 /* Reachability.swift in Sources */,
 				84B5CF7627E98B9A00A847E5 /* NewsCell.swift in Sources */,
+				84754AAB27EC7AC900116D77 /* WeatherAPI.swift in Sources */,
+				84754AAD27EC7AEA00116D77 /* Weather.swift in Sources */,
+				84754AA127EC5FF800116D77 /* TargetType.swift in Sources */,
 				84B5CF7A27E9AA1B00A847E5 /* DetailViewController.swift in Sources */,
 				84C625EC27E9713F00BC4EF6 /* Articles.swift in Sources */,
 				84B5CF7C27E9B38A00A847E5 /* DetailViewModel.swift in Sources */,
 				84BBBB0027EB0DE0007A6BD4 /* ApiService.swift in Sources */,
 				84B5CF6E27E97B6000A847E5 /* setImage+Extention.swift in Sources */,
+				84754AA727EC66FC00116D77 /* ApiClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
