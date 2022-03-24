@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DataArticles: Decodable {
+struct DataArticles: Codable {
     var status: String?
     var articles: [Articles]?
     
@@ -17,7 +17,7 @@ struct DataArticles: Decodable {
     }
 }
 
-struct Articles: Decodable {
+struct Articles: Codable {
     var source: Source?
     var author: String?
     var title: String?
@@ -33,7 +33,7 @@ struct Articles: Decodable {
     }
 }
 
-struct Source: Decodable {
+struct Source: Codable {
     var id: String?
     var name: String?
     

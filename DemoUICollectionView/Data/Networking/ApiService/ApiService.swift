@@ -7,37 +7,38 @@
 
 import Foundation
 
-class ApiService {
-    
+final class APIManager {
     let defaultSession = URLSession(configuration: .default)
     var dataTask: URLSessionDataTask?
-    
-    func getSearchResults(searchText: String ,completion: @escaping (_ response: [Articles]?,_ error: ErrorModel?) -> Void) {
+    static var shared = APIManager()
+    private init() { }
+}
+
+extension APIManager {
+    func requestApi<T>(type: TargetType, completionHandler: @escaping (_ result: Result<T?, ErrorModel>) -> ()) where T: Codable {
         dataTask?.cancel()
-        guard var urlComponents = URLComponents(string: "https://newsapi.org/v2/everything?") else { return }
-        urlComponents.query = "q=\(searchText)&from=\(year)-\(month)-\(day)&sortBy=publishedAt&apiKey=" + apiKey
         
-        guard let url = urlComponents.url else { return }
+        guard let url = type.url else {
+            completionHandler(.failure(ErrorModel.unknownError))
+            return
+        }
+        
         dataTask = defaultSession.dataTask(with: url) { data, response, error in
             defer { self.dataTask = nil }
             if let response = response as? HTTPURLResponse {
                 if response.statusCode == 200 {
                     guard let responseData = data else {
-                        completion(nil,.none)
+                        completionHandler(.failure(ErrorModel.unknownError))
                         return
                     }
                     let decoder = JSONDecoder()
-                    guard let result = try? decoder.decode(DataArticles.self, from: responseData) else { return }
-                    guard let resultData = result.articles else {
-                        completion(nil,.noData)
+                    guard let result = try? decoder.decode(T.self, from: responseData) else {
+                        completionHandler(.failure(ErrorModel.noData))
                         return
                     }
-                    if !resultData.isEmpty {
-                        completion(resultData,nil)
-                    }
+                    completionHandler(.success(result))
                 } else {
-                    let errorResponse = ErrorModel(responseDataStatus: response)
-                    completion(nil,errorResponse)
+                    completionHandler(.failure(ErrorModel.init(responseDataStatus: response)))
                 }
             }
         }
