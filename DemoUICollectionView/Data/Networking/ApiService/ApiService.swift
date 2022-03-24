@@ -13,10 +13,10 @@ class ApiService {
     var dataTask: URLSessionDataTask?
     var errorMessage: String = ""
     
-    func getSearchResults(searchTerm: String, completion: @escaping (_ response: [Articles]?,_ error: ErrorModel?) -> Void) {
+    func getSearchResults(searchTerm: String, day: Int, completion: @escaping (_ response: [Articles]?,_ error: ErrorModel?) -> Void) {
         dataTask?.cancel()
         guard var urlComponents = URLComponents(string: "https://newsapi.org/v2/everything?") else { return }
-        urlComponents.query = "q=\(searchTerm)&from=2022-02-23&sortBy=publishedAt&apiKey=d9f5d5ed4a84439d970ca1c7d8c9135d"
+        urlComponents.query = "q=\(searchTerm)&from=2022-02-\(day)&sortBy=publishedAt&apiKey=d9f5d5ed4a84439d970ca1c7d8c9135d"
         guard let url = urlComponents.url else { return }
         dataTask = defaultSession.dataTask(with: url) { data, response, error in
             defer { self.dataTask = nil }
