@@ -73,6 +73,7 @@ class HomeViewController: UIViewController {
         newsSearchBar.delegate = self
         newsCollectionView.delegate = self
         newsCollectionView.dataSource = self
+        homeViewModel.getWeatherApi()
         
         [newsSearchBar, newsCollectionView, connectStatusView].forEach { item in
             view.addSubview(item)
@@ -166,7 +167,7 @@ extension HomeViewController: UISearchBarDelegate {
         }
         
         if reachability.isConnectedToNetwork() {
-            homeViewModel.getApi(query: query)
+            homeViewModel.getNewsApi(query: query)
         } else {
             showAlert(message: textDisconnet)
         }
