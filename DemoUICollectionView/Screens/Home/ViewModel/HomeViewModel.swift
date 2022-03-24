@@ -15,17 +15,28 @@ protocol HomeViewModelEvents: AnyObject {
 class HomeViewModel {
     weak var delegate: HomeViewModelEvents?
     var listNews: [Articles] = []
-    let api = ApiService()
-
-    func getApi(query: String) {
+    let api = APIClient()
+    
+    func getWeatherApi() {
+        api.getWeather { [weak self] result in
+            switch result {
+            case .success(let weather):
+                print(weather)
+            case .failure(let error):
+                print(error.rawValue)
+            }
+        }
+    }
+    
+    func getNewsApi(query: String) {
         listNews.removeAll()
-        api.getSearchResults(searchText: query) { [weak self] response, error in
+        api.getNews(query: query) { [weak self] result in
             guard let self = self else { return }
-            guard let result = response else { return }
-            if !result.isEmpty {
-                self.listNews = result
+            switch result {
+            case .success(let list):
+                self.listNews = list
                 self.delegate?.gotDataNews()
-            } else {
+            case .failure(_):
                 self.delegate?.gotError()
             }
         }
