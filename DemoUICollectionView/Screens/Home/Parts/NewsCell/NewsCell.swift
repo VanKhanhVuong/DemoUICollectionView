@@ -11,7 +11,7 @@ class NewsCell: UICollectionViewCell {
     
     fileprivate let newsImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
@@ -51,7 +51,7 @@ class NewsCell: UICollectionViewCell {
     }
     
     func configCell(new: Articles) {
-        newsImageView.setImageWithUrl(url: new.urlToImage ?? "")
+        newsImageView.setImageWithUrl(url: new.urlToImage ?? whiteSpaces)
         titleLabel.text = new.title
     }
 }
