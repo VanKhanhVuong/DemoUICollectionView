@@ -51,6 +51,15 @@ class DetailViewController: UIViewController {
         return label
     }()
     
+    fileprivate let relatedNewsCollectionView: UICollectionView = {
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
+        layout.scrollDirection = UICollectionView.ScrollDirection.horizontal
+        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        collectionView.setCollectionViewLayout(layout, animated: true)
+        collectionView.register(cellType: RelatedNewsCell.self)
+        return collectionView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -61,6 +70,8 @@ class DetailViewController: UIViewController {
         view.backgroundColor = .white
         
         detailViewModel.delegate = self
+        relatedNewsCollectionView.delegate = self
+        relatedNewsCollectionView.dataSource = self
         detailViewModel.getData()
         
         view.addSubview(scrollView)
@@ -69,7 +80,7 @@ class DetailViewController: UIViewController {
         scrollView.addSubview(contentView)
         contentView.translatesAutoresizingMaskIntoConstraints = false
         
-        [newsImageView, titleLabel, descriptionLabel, sourceLabel, authorLabel].forEach { item in
+        [newsImageView, titleLabel, descriptionLabel, sourceLabel, authorLabel, relatedNewsCollectionView].forEach { item in
             contentView.addSubview(item)
             item.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -109,12 +120,32 @@ class DetailViewController: UIViewController {
         sourceLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 5).isActive = true
         sourceLabel.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -10).isActive = true
         sourceLabel.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 10).isActive = true
-        sourceLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -10).isActive = true
         sourceLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 20).isActive = true
+        
+        relatedNewsCollectionView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        relatedNewsCollectionView.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: 0).isActive = true
+        relatedNewsCollectionView.topAnchor.constraint(equalTo: sourceLabel.bottomAnchor, constant: 5).isActive = true
+        relatedNewsCollectionView.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -10).isActive = true
+        relatedNewsCollectionView.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 10).isActive = true
+        relatedNewsCollectionView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -10).isActive = true
+    }
+    
+    private func showNews(index: Int) {
+        detailViewModel.clearData()
+        detailViewModel.itemNews = detailViewModel.listNews[index]
+        detailViewModel.listNews.remove(at: index)
+        detailViewModel.getData()
+        detailViewModel.refreshList()
     }
 }
 
 extension DetailViewController: DetailViewModelEvents {
+    func refreshData() {
+        DispatchQueue.main.async {
+            self.relatedNewsCollectionView.reloadData()
+        }
+    }
+    
     func gotData() {
         DispatchQueue.main.async {
             let image = self.detailViewModel.itemNews.urlToImage ?? whiteSpaces
@@ -127,7 +158,41 @@ extension DetailViewController: DetailViewModelEvents {
             self.titleLabel.text = "Title:\n" + title + "\n"
             self.descriptionLabel.text = "Description:\n" + description + "\n"
             self.authorLabel.text = "Author:\n" + author + "\n"
-            self.sourceLabel.text = "Source:\n" + source
+            
+            if !self.detailViewModel.listNews.isEmpty {
+                self.sourceLabel.text = "Source:\n" + source + "\n\nRelated News:"
+            } else {
+                self.sourceLabel.text = "Source:\n" + source
+            }
         }
     }
 }
+
+extension DetailViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        showNews(index: indexPath.item)
+    }
+}
+
+extension DetailViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: relatedNewsCollectionView.frame.width, height: relatedNewsCollectionView.frame.height)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
+}
+
+extension DetailViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return detailViewModel.listNews.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let itemCell = collectionView.dequeueReusableCell(with: RelatedNewsCell.self, for: indexPath)
+        itemCell.configCell(new: detailViewModel.listNews[indexPath.item])
+        return itemCell
+    }
+}
+

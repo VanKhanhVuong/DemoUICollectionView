@@ -1,14 +1,13 @@
 //
-//  NewsCell.swift
+//  RelatedNewsCell.swift
 //  DemoUICollectionView
 //
-//  Created by admin on 22/03/2022.
+//  Created by admin on 24/03/2022.
 //
 
 import UIKit
 
-class NewsCell: UICollectionViewCell {
-    
+class RelatedNewsCell: UICollectionViewCell {
     fileprivate let newsImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -17,7 +16,8 @@ class NewsCell: UICollectionViewCell {
     
     fileprivate let titleLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.textColor = .orange
+        label.numberOfLines = 1
         return label
     }()
     
@@ -36,14 +36,13 @@ class NewsCell: UICollectionViewCell {
         
         // Set constraints
         newsImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
-        newsImageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.5).isActive = true
+        newsImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
         newsImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
         newsImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0).isActive = true
         
-        titleLabel.topAnchor.constraint(equalTo: newsImageView.bottomAnchor, constant: 5).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5).isActive = true
         titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5).isActive = true
-        titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+        titleLabel.bottomAnchor.constraint(equalTo: newsImageView.bottomAnchor, constant: 0).isActive = true
     }
     
     required init?(coder: NSCoder) {

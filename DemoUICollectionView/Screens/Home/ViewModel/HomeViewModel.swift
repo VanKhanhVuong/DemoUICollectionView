@@ -19,7 +19,7 @@ class HomeViewModel {
 
     func getApi(query: String) {
         listNews.removeAll()
-        api.getSearchResults(searchTerm: query, day: day, month: month, year: year) { [weak self] response, error in
+        api.getSearchResults(searchText: query) { [weak self] response, error in
             guard let self = self else { return }
             guard let result = response else { return }
             if !result.isEmpty {
