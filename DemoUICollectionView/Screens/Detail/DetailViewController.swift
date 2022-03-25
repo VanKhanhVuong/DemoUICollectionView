@@ -16,18 +16,18 @@ class DetailViewController: UIViewController {
         return scrollView
     }()
     
-    fileprivate let contentView: UIView = {
+    public lazy var contentView: UIView = {
         let view = UIView()
         return view
     }()
     
-    fileprivate let newsImageView: UIImageView = {
+    public lazy var newsImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
-    fileprivate let titleLabel: UILabel = {
+    public lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         return label
@@ -196,3 +196,12 @@ extension DetailViewController: UICollectionViewDataSource {
     }
 }
 
+extension DetailViewController: ZoomingViewController {
+    func zoomingImageView(for transition: ZoomTransitioningDelegate) -> UIImageView? {
+        return nil
+    }
+    
+    func zoomingBackgroundView(for transition: ZoomTransitioningDelegate) -> UIView? {
+        return newsImageView
+    }
+}

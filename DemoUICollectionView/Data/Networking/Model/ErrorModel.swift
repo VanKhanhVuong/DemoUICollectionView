@@ -17,6 +17,7 @@ enum ErrorModel: String, Error {
     case unableToDecode
     case noData = "Response returned with no data to decode."
     case notFound = "The server can not find the requested resource"
+    case notInternet = "Internet Connection not Available!"
     init(responseDataStatus code: HTTPURLResponse ) {
         switch code.statusCode {
         case 401:
