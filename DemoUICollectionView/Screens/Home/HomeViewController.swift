@@ -11,6 +11,14 @@ class HomeViewController: UIViewController {
     
     let homeViewModel = HomeViewModel()
     let reachability = Reachability()
+    private let transitionManager = TransitionManager(duration: 0.5)
+//    private let zoomTransitioningDelegate = ZoomTransitioningDelegate()
+    public var newsCell: NewsCell?
+    var selectedIndexPath: IndexPath!
+    
+//    struct Storyboard {
+//        static let showDetailSegue = "ShowDetail"
+//    }
     
     fileprivate let newsSearchBar: UISearchBar = {
         let searchbar = UISearchBar()
@@ -40,7 +48,6 @@ class HomeViewController: UIViewController {
     
     private func checkInternet() {
         if !reachability.isConnectedToNetwork() {
-            showAlert(message: textDisconnet)
             showRed()
         } else {
             showGreen()
@@ -62,6 +69,7 @@ class HomeViewController: UIViewController {
     }
     
     private func setupView() {
+//        navigationController?.delegate = zoomTransitioningDelegate
         self.title = homeTitle
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
         navigationController?.navigationBar.tintColor = .black
@@ -73,7 +81,6 @@ class HomeViewController: UIViewController {
         newsSearchBar.delegate = self
         newsCollectionView.delegate = self
         newsCollectionView.dataSource = self
-        homeViewModel.getWeatherApi()
         
         [newsSearchBar, newsCollectionView, connectStatusView].forEach { item in
             view.addSubview(item)
@@ -106,6 +113,8 @@ class HomeViewController: UIViewController {
         detailViewController.detailViewModel.itemNews = homeViewModel.listNews[index]
         detailViewController.detailViewModel.listNews = homeViewModel.listNews
         detailViewController.detailViewModel.listNews.remove(at: index)
+        navigationController?.delegate = transitionManager
+//        navigationController?.delegate = zoomTransitioningDelegate
         navigationController?.pushViewController(detailViewController, animated: true)
     }
     
@@ -117,6 +126,11 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let itemCell = collectionView.dequeueReusableCell(with: NewsCell.self, for: indexPath)
+        itemCell.configCell(new: homeViewModel.listNews[indexPath.item])
+        
+        newsCell = itemCell
+        self.selectedIndexPath = indexPath
         showDetailNews(index: indexPath.item)
     }
 }
@@ -144,13 +158,18 @@ extension HomeViewController: UICollectionViewDataSource {
 }
 
 extension HomeViewController: HomeViewModelEvents {
+    
+    func gotError(error: String) {
+        DispatchQueue.main.async {
+            self.showAlert(message: error)
+        }
+    }
+    
     func gotDataNews() {
         DispatchQueue.main.async {
             self.newsCollectionView.reloadData()
         }
     }
-    
-    func gotError() { }
 }
 
 extension HomeViewController: UISearchBarDelegate {
@@ -159,18 +178,13 @@ extension HomeViewController: UISearchBarDelegate {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.reload(_:)), object: searchBar)
         perform(#selector(self.reload(_:)), with: searchBar, afterDelay: 1)
     }
-
+    
     @objc func reload(_ searchBar: UISearchBar) {
         guard let query = searchBar.text, query.trimmingCharacters(in: .whitespaces) != whiteSpaces else {
             clearSearchBar()
             return
         }
-        
-        if reachability.isConnectedToNetwork() {
-            homeViewModel.getNewsApi(query: query)
-        } else {
-            showAlert(message: textDisconnet)
-        }
+        homeViewModel.getNewsApi(query: query)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -178,3 +192,19 @@ extension HomeViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
     }
 }
+//
+//extension HomeViewController: ZoomingViewController {
+//    func zoomingImageView(for transition: ZoomTransitioningDelegate) -> UIImageView? {
+//        if let indexPath = selectedIndexPath {
+//            let cell = collectionView(newsCollectionView, cellForItemAt: indexPath) as! NewsCell
+//            return cell.newsImageView
+//        }
+//        return nil
+//    }
+//
+//    func zoomingBackgroundView(for transition: ZoomTransitioningDelegate) -> UIView? {
+//        return nil
+//    }
+//
+//
+//}

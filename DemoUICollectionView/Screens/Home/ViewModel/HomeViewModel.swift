@@ -9,7 +9,7 @@ import Foundation
 
 protocol HomeViewModelEvents: AnyObject {
     func gotDataNews()
-    func gotError()
+    func gotError(error: String)
 }
 
 class HomeViewModel {
@@ -17,16 +17,16 @@ class HomeViewModel {
     var listNews: [Articles] = []
     let api = APIClient()
     
-    func getWeatherApi() {
-        api.getWeather { [weak self] result in
-            switch result {
-            case .success(let weather):
-                print(weather)
-            case .failure(let error):
-                print(error.rawValue)
-            }
-        }
-    }
+//    func getWeatherApi() {
+//        api.getWeather { [weak self] result in
+//            switch result {
+//            case .success(let weather):
+//                print(weather)
+//            case .failure(let error):
+//                print(error.rawValue)
+//            }
+//        }
+//    }
     
     func getNewsApi(query: String) {
         listNews.removeAll()
@@ -36,8 +36,8 @@ class HomeViewModel {
             case .success(let list):
                 self.listNews = list
                 self.delegate?.gotDataNews()
-            case .failure(_):
-                self.delegate?.gotError()
+            case .failure(let error):
+                self.delegate?.gotError(error: error.rawValue)
             }
         }
     }
